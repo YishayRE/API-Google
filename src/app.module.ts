@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import { join } from 'path';
+
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PruebaGoogleController } from './prueba-google/prueba-google.controller';
-import { PruebaGoogleService } from './prueba-google/prueba-google.service';
-import { YishayController } from './yishay/yishay.controller';
-import { YishayService } from './yishay/yishay.service';
-import { YishayModule } from './yishay/yishay.module';
+import { GmailController } from './gmail/gmail.controller';
+import { GmailService } from './gmail/gmail.service';
+import { GoogleSpacesController } from './google-spaces/google-spaces.controller';
+import { GoogleSpacesService } from './google-spaces/google-spaces.service';
 
 console.log(join(__dirname, './templates'));
 
 @Module({
   imports: [
-    YishayModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
@@ -40,9 +40,11 @@ console.log(join(__dirname, './templates'));
         }
       }),
       inject: [ConfigService]
-    }), ConfigModule.forRoot()
+    }), 
+    ConfigModule.forRoot(),
+    HttpModule
   ],
-  controllers: [AppController, PruebaGoogleController, YishayController],
-  providers: [AppService, PruebaGoogleService, YishayService],
+  controllers: [AppController, GmailController, GoogleSpacesController],
+  providers: [AppService, GmailService, GoogleSpacesService],
 })
 export class AppModule {}
