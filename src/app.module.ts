@@ -12,6 +12,8 @@ import { GmailController } from './gmail/gmail.controller';
 import { GmailService } from './gmail/gmail.service';
 import { GoogleSpacesController } from './google-spaces/google-spaces.controller';
 import { GoogleSpacesService } from './google-spaces/google-spaces.service';
+import { CalendarController } from './calendar/calendar.controller';
+import { CalendarService } from './calendar/calendar.service';
 
 console.log(join(__dirname, './templates'));
 
@@ -44,7 +46,7 @@ console.log(join(__dirname, './templates'));
     ConfigModule.forRoot(),
     HttpModule
   ],
-  controllers: [AppController, GmailController, GoogleSpacesController],
-  providers: [AppService, GmailService, GoogleSpacesService],
+  controllers: [AppController, GmailController, GoogleSpacesController, CalendarController],
+  providers: [AppService, GmailService, GoogleSpacesService, CalendarService],
 })
 export class AppModule {}
