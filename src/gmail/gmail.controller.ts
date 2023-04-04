@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { GmailService } from './gmail.service';
 
-@Controller('yishay')
+@Controller('gmail')
 export class GmailController {
   constructor(private readonly gmailService: GmailService) {}
 

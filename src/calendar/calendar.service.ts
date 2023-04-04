@@ -63,15 +63,65 @@ export class CalendarService {
     });
 
     const events = res.data.items;
-    if (!events || events.length === 0) {
-      console.log('No upcoming events found.');
-      return;
-    }
+    if (!events || events.length === 0)
+      return 'No upcoming events found.';
     
-    console.log('Upcoming 10 events:');
+    let nextEvents = 'Upcoming 10 events:';
     events.map(event => {
       const start = event.start.dateTime || event.start.date;
-      console.log(`${start} - ${event.summary}`);
+      nextEvents += `\n\n${start} - ${event.summary}`;
+    });
+
+    return nextEvents;
+  }
+  private async createEvent(auth: any, emails: string[], inicio: string, fin: string) {
+    console.log(emails);
+    const calendar = google.calendar({version: 'v3', auth});
+    const event = {
+      'colorId': '2',
+      'summary': 'Reclutamiento',
+      'location': 'Google Meet',
+      'description': 'Una reunión para el proceso de reclutamiento.',
+      'start': {
+        //'dateTime': '2023-04-04T13:30:00.843Z',
+        'dateTime': inicio,
+        'timeZone': 'America/Mexico_City',
+      },
+      'end': {
+        //'dateTime': '2023-04-04T14:00:00.843Z',
+        'dateTime': fin,
+        'timeZone': 'America/Mexico_City',
+      },
+      'attendees': emails.map(email => { return {'email': email}}),
+      //[
+        //{'email': 'yishay.rodriguez@wundertec.com'},
+      //],
+      'reminders': {
+        'useDefault': false,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+      'conferenceData': {
+        'conferenceSolution': {
+          'key': {
+            'type': 'hangoutsMeet'
+          }
+        }
+      }
+    };
+
+    calendar.events.insert({
+      auth: auth,
+      calendarId: 'primary',
+      requestBody: event,
+    }, function(err, event) {
+      if (err) {
+        console.log('There was an error contacting the Calendar service: ' + err);
+        return;
+      }
+      console.log('Event created:', event);
     });
   }
 
@@ -84,15 +134,27 @@ export class CalendarService {
     this.credentials_path = join(__dirname, '../assets', './credentials.json');
   }
 
-  getCalendar() {
+  async getCalendar() {
     try {
-      this.authorize().then(this.listEvents).catch(console.error)
+      const client = await this.authorize();
 
-      return 'getCalendar';
+      return await this.listEvents(client);
     } catch (error) {
       console.error(error);
 
       return error;
+    }
+  }
+
+  async postCalendarEvent(emails: string[], inicio: string, fin: string) {
+    try{
+      const client = await this.authorize();
+      await this.createEvent(client, emails, inicio, fin);
+      
+      return 'Bien';
+    }
+    catch(error) {
+      console.log(error);
     }
   }
 }
