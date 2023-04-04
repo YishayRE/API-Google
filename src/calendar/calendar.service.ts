@@ -80,8 +80,8 @@ export class CalendarService {
       'https://www.googleapis.com/auth/calendar',
       'https://www.googleapis.com/auth/calendar.events'
     ];
-    this.token_path = join(__dirname, './assets', './token.json');
-    this.credentials_path = join(__dirname, './assets', './credentials.json');
+    this.token_path = join(__dirname, '../assets', './token.json');
+    this.credentials_path = join(__dirname, '../assets', './credentials.json');
   }
 
   getCalendar() {

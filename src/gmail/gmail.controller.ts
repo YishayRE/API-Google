@@ -3,10 +3,10 @@ import { GmailService } from './gmail.service';
 
 @Controller('yishay')
 export class GmailController {
-  constructor(private readonly yishayService: GmailService) {}
+  constructor(private readonly gmailService: GmailService) {}
 
   @Post('send')
   async sendEmail(@Body('email') email: string, @Body('name') name: string) {
-    return await this.yishayService.sendMail(email, name);
+    return await this.gmailService.sendMail(email, name);
   }
 }
