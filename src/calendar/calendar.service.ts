@@ -75,7 +75,6 @@ export class CalendarService {
     return nextEvents;
   }
   private async createEvent(auth: any, emails: string[], inicio: string, fin: string) {
-    console.log(emails);
     const calendar = google.calendar({version: 'v3', auth});
     const event = {
       'colorId': '2',
@@ -112,7 +111,7 @@ export class CalendarService {
       }
     };
 
-    calendar.events.insert({
+    return calendar.events.insert({
       auth: auth,
       calendarId: 'primary',
       requestBody: event,
@@ -149,9 +148,8 @@ export class CalendarService {
   async postCalendarEvent(emails: string[], inicio: string, fin: string) {
     try{
       const client = await this.authorize();
-      await this.createEvent(client, emails, inicio, fin);
-      
-      return 'Bien';
+      return await this.createEvent(client, emails, inicio, fin);
+      //return 'Evento creado correctamente';
     }
     catch(error) {
       console.log(error);
